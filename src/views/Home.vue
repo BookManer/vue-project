@@ -1,18 +1,26 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <AppLayout>
+    <v-layout column justify-center align-center>
+      <h1>Home</h1>
+      <v-card width="320px" class="mb-5" v-for="channel in channels" :key="channel.id">
+        <v-card-title>
+          <router-link :to="'/channel/' + channel.id">{{ channel.name }}</router-link>
+        </v-card-title>
+        <v-card-text>{{ channel.description }}</v-card-text>
+      </v-card>
+    </v-layout>
+  </AppLayout>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue';
+import { mapState } from 'vuex';
+import AppLayout from './layouts/AppLayout.vue';
 
 export default {
   name: 'home',
-  components: {
-    HelloWorld,
+  computed: {
+    ...mapState('channels', ['channels']),
   },
+  components: { AppLayout },
 };
 </script>
