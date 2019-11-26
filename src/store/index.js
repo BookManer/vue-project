@@ -1,19 +1,18 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import fb from '../db';
 // Modules
 import channels from './modules/chanels.module';
-import users from './modules/users.module';
-// Firebase Real Time Database
-import db from '../db';
+import auth from './modules/auth.module';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    db,
+    db: fb.firestore(),
   },
   modules: {
     channels,
-    users,
+    auth,
   },
 });
