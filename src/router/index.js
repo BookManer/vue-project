@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+// import qs from 'querystring';
 import store from '../store';
 import Home from '../views/Home.vue';
 import Channel from '../views/Channel.vue';
@@ -35,12 +36,15 @@ const router = new VueRouter({
 });
 
 router.beforeResolve((to, from, next) => {
-  if (to.meta.requiredAuth && store.getters['auth/isAuth']) {
-    next({
-      path: '/signIn',
-      query: to.path,
-    });
-    return;
+  if (to.meta.requiredAuth) {
+    if (store.getters['auth/isAuth']) {
+      next({
+        path: '/signIn',
+        query: { redirect: to.fullPath },
+      });
+      return;
+    }
+    next();
   }
   next();
 });

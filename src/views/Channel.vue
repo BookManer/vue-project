@@ -26,7 +26,7 @@ export default {
   },
   computed: { ...mapGetters('channels', ['channelById']) },
   mounted() {
-    this.channel = this.channelById(this.$route.params.id);
+    this.channel = this.channelById(this.$route.query.id);
   },
   components: {
     AppLayout,

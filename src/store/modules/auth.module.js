@@ -23,9 +23,15 @@ export default {
         }
       });
     },
-    onUserSignIn(userFormData) {
+    async onUserSignIn({ commit }, userFormData) {
       const { login, password } = userFormData;
-      return fbAuth.signInWithEmailAndPassword(login, password);
+      console.log(userFormData);
+      const res = fbAuth.signInWithEmailAndPassword(login, password);
+      res.then(({ user }) => {
+        commit('UPDATE_USER', { id: user.uid, ...userFormData });
+      });
+
+      return res;
     },
     onUserSignOut() {
       return fbAuth.signOut();
