@@ -5,10 +5,10 @@ const fbAuth = fb.auth();
 export default {
   namespaced: true,
   state: {
-    user: null,
+    user: {},
   },
   getters: {
-    isAuth: state => (state.user !== null),
+    isAuth: state => state.user.email !== undefined,
   },
   mutations: {
     UPDATE_USER(state, data) {
@@ -18,23 +18,24 @@ export default {
   actions: {
     install({ commit, getters }) {
       fbAuth.onAuthStateChanged((user) => {
-        if (!getters.isAuthired) {
+        if (!getters.isAuth) {
           commit('UPDATE_USER', user);
         }
+
+        return user;
       });
     },
     async onUserSignIn({ commit }, userFormData) {
       const { login, password } = userFormData;
       console.log(userFormData);
-      const res = fbAuth.signInWithEmailAndPassword(login, password);
-      res.then(({ user }) => {
-        commit('UPDATE_USER', { id: user.uid, ...userFormData });
-      });
+      const user = await fbAuth.signInWithEmailAndPassword(login, password);
+      commit('UPDATE_USER', { ...userFormData });
 
-      return res;
+      return user;
     },
-    onUserSignOut() {
-      return fbAuth.signOut();
+    async onUserSignOut({ commit }) {
+      await fbAuth.signOut();
+      commit('UPDATE_USER', null);
     },
   },
 };

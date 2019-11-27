@@ -6,6 +6,7 @@ export default {
     channels: [],
   },
   getters: {
+    hasChannels: state => state.channels.length !== 0,
     channelById: state => id => state.channels.filter(channel => channel.id === id)[0],
     searchChannel(state, query) {
       return state.channels.filter(({ name }) => (

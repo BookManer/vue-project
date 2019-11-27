@@ -35,7 +35,11 @@ export default {
       try {
         const { login, password } = this;
         this.loading = true;
+
         await store.dispatch('auth/onUserSignIn', { login, password });
+        const path = 'redirect' in this.$route.query ? this.$route.query.redirect : '/';
+        await this.$router.push({ path });
+
         this.loading = false;
       } catch (err) {
         this.error = err.message;
