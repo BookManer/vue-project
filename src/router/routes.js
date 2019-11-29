@@ -10,13 +10,16 @@ export default [
     name: 'home',
     component: Home,
     meta: {
-      requiredAuth: false,
+      requiredAuth: true,
     },
   },
   {
     path: '/signIn',
     name: 'signIn',
     component: SignIn,
+    meta: {
+      requiredAuth: false,
+    },
   },
   {
     path: '/channel/:id',

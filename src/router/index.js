@@ -2,7 +2,9 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import routes from './routes';
 import store from '../store';
+import fb from '../db';
 
+const fbAuth = fb.auth();
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -10,20 +12,29 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
+router.beforeResolve((to, from, next) => {
+  try {
+    if (to.meta.requiredAuth) {
+      if (!store.getters['auth/isAuth']) {
+        fbAuth.onAuthStateChanged((currentUser) => {
+          const isAuth = !!currentUser;
+          if (!isAuth) {
+            next({
+              path: '/signIn',
+              query: { redirect: to.fullPath },
+            });
+          }
 
-router.beforeEach((to, from, next) => {
-  if (to.meta.requiredAuth) {
-    setTimeout(async () => {
-      const isAuth = store.getters['auth/isAuth'];
-      if (!isAuth) {
-        await router.push({ path: '/signIn', query: { redirect: to.fullPath } });
-        return;
+          store.commit('auth/UPDATE_USER', currentUser);
+          store.commit('auth/UPDATE_IS_AUTHORIZED', !!currentUser);
+        });
       }
-
       next();
-    }, 2000);
+    }
+    next();
+  } catch (err) {
+    console.error(err);
   }
-  next();
 });
 
 export default router;
