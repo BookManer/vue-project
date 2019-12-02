@@ -1,5 +1,5 @@
 <template>
-  <EmptyLayout>
+  <AppLayout>
     <v-layout justify-center align-center column>
       <v-card class="pa-5 d-flex flex-column" :loading="loading">
         <form @submit.prevent="onSubmit">
@@ -9,16 +9,16 @@
         </form>
       </v-card>
       <v-card dark v-if="error" color="error">
-        <v-card-text>{{ error }}</v-card-text>
+        <v-card-text>{{ error | t_errors }}</v-card-text>
       </v-card>
     </v-layout>
-  </EmptyLayout>
+  </AppLayout>
 </template>
 
 <script>
 // import urldecode from 'urldecode';
 import store from '../store';
-import EmptyLayout from './layouts/EmptyLayout.vue';
+import AppLayout from './layouts/AppLayout.vue';
 
 export default {
   name: 'SignIn',
@@ -42,14 +42,14 @@ export default {
 
         this.loading = false;
       } catch (err) {
-        this.error = err.message;
+        this.error = err.code;
         this.loading = false;
         setTimeout(() => { this.error = null; }, 3000);
       }
     },
   },
   components: {
-    EmptyLayout,
+    AppLayout,
   },
 };
 </script>

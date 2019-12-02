@@ -11,28 +11,33 @@ export default [
     component: Home,
     meta: {
       requiredAuth: true,
-    },
-  },
-  {
-    path: '/signIn',
-    name: 'signIn',
-    component: SignIn,
-    meta: {
-      requiredAuth: false,
-    },
-  },
-  {
-    path: '/channel/:id',
-    name: 'channel',
-    component: Channel,
-    meta: {
-      requiredAuth: true,
+      appMenu: {
+        name: 'Главная',
+        faIcon: 'fas fa-home',
+      },
     },
   },
   {
     path: '/profile/:id',
     name: 'profile',
     component: UserProfile,
+    meta: {
+      requiredAuth: true,
+      appMenu: {
+        name: 'Профиль',
+        faIcon: 'fas fa-user',
+      },
+    },
+  },
+  {
+    path: '/signIn',
+    name: 'signIn',
+    component: SignIn,
+  },
+  {
+    path: '/channel/:id',
+    name: 'channel',
+    component: Channel,
     meta: {
       requiredAuth: true,
     },
