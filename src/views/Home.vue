@@ -20,6 +20,10 @@ export default {
   name: 'home',
   computed: {
     ...mapState('channels', ['channels']),
+    ...mapState('auth', ['user']),
+  },
+  created() {
+    console.log(this.user);
   },
   components: { AppLayout },
 };

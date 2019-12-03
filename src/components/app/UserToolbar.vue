@@ -11,17 +11,26 @@
       <v-card flat class="px-5">
         <v-list-item-content>
           <v-list-item-title class="title">Меню</v-list-item-title>
-          <v-list-item-subtitle>Ноготков Андрей</v-list-item-subtitle>
+          <v-list-item-subtitle>{{ user.displayName }}</v-list-item-subtitle>
         </v-list-item-content>
         <v-divider></v-divider>
         <v-list>
+          <v-item>
+            <v-layout class="flex-row mb-2">
+              <v-icon size="16" color="blue">fas fa-home</v-icon>
+              <span class="ml-2">
+                <router-link to="/" class="black--text">Главная</router-link>
+              </span>
+            </v-layout>
+          </v-item>
+          <v-divider></v-divider>
           <v-item v-for="(item, index) in menuItems" :key="index">
             <router-link :to="item.path">
-              <v-layout class="flex-row">
+              <v-layout class="flex-row mt-2">
                 <v-icon size="16" color="blue">{{ item.faIcon }}</v-icon>
-                <v-list-item-title class="ml-2 subtitle-1 black--text">
+                <span class="ml-2 subtitle-1 black--text">
                   {{ item.name }}
-                </v-list-item-title>
+                </span>
               </v-layout>
             </router-link>
           </v-item>
@@ -29,19 +38,17 @@
           <v-item>
             <v-list-item-group v-if="isAuth">
               <v-icon size="16" color="blue">fas fa-sign-out-alt</v-icon>
-              <v-list-item-text @click="handleSignOut" class="ml-2 black--text">
-                Выйти
-              </v-list-item-text>
+              <span @click="handleSignOut" class="ml-2 black--text">Выйти</span>
             </v-list-item-group>
             <v-list-item-group v-else>
-              <v-list-item-title>
+              <v-layout class="flex-row mt-2">
                 <v-icon size="16" color="blue">fas fa-user-plus</v-icon>
                 <router-link to="signUp" class="ml-2 black--text">Зарегистрироваться</router-link>
-              </v-list-item-title>
-              <v-list-item-title>
+              </v-layout>
+              <v-layout class="flex-row mt-2">
                 <v-icon size="16" color="blue">fas fa-sign-in-alt</v-icon>
                 <router-link to="signIn" class="ml-2 black--text">Войти</router-link>
-              </v-list-item-title>
+              </v-layout>
             </v-list-item-group>
           </v-item>
         </v-list>

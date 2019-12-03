@@ -28,6 +28,11 @@ export default {
 
       return user;
     },
+    async onUserSignUp({ commit }, userFormData) {
+      const { email, name, password } = userFormData;
+      await fbAuth.createUserWithEmailAndPassword(email, password);
+      commit('UPDATE_USER', { displayName: name });
+    },
     async onUserSignOut({ commit }) {
       await fbAuth.signOut();
       commit('UPDATE_USER', null);
