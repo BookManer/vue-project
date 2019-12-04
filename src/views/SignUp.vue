@@ -1,11 +1,9 @@
 <template>
   <AppLayout>
     <v-layout justify-center align-center column>
-      <v-card class="pa-5 d-flex flex-column" :loading="loading">
-        <BaseGeneratorForm @submit="onSubmit"
-                           v-model="formData"
-                           :schema="schema"
-                           type="formSignUp" />
+      <v-card class="pa-5 d-flex flex-column formSignUp" :loading="loading">
+        <BaseGeneratorForm @submitForm="onSubmit($event)"
+                           :schema="schema" />
       </v-card>
       <v-card dark v-if="error" color="error">
         <v-card-text>{{ error | t_errors }}</v-card-text>
@@ -35,10 +33,10 @@ export default {
   },
   methods: {
     ...mapActions('auth', ['onUserSignUp']),
-    async onSubmit() {
-      const { mEmail, name, password } = this;
+    async onSubmit(formData) {
+      const { name, password } = formData;
       this.loading = true;
-      this.onUserSignUp({ email: mEmail, name, password })
+      this.onUserSignUp({ email: formData.email, name, password })
         .then(() => {
           this.$router.push({ name: 'home' });
           this.loading = false;
@@ -57,6 +55,8 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style lang="scss">
+  .formSignUp {
+    min-width: 360px;
+  }
 </style>

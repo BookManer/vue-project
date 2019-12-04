@@ -6,31 +6,48 @@ export default {
       fields: [
         {
           name: 'email',
+          type: 'email',
           label: 'Почта',
-          rules: {
-            required,
-            email,
-          },
+          error: 'invalid-format:email',
+          rules: [{
+            nameProp: 'required',
+            validator: required,
+          }, {
+            nameProp: 'email',
+            validator: email,
+          }],
         }, {
           name: 'name',
           label: 'ФИО',
-          rules: {
-            required,
-            valid: value => value.trim().split(' ').length === 3,
-          },
+          type: 'text',
+          error: 'invalid-format:fio',
+          rules: [{
+            nameProp: 'required',
+            validator: required,
+          }, {
+            nameProp: 'valid',
+            validator: value => value.trim().split(' ').length === 3,
+          }],
         }, {
           name: 'password',
           label: 'Пароль',
-          rules: {
-            required,
-          },
+          type: 'password',
+          rules: [{
+            nameProp: 'required',
+            validator: required,
+          }],
         }, {
           name: 'repeatPassword',
           label: 'Подтвердить пароль',
-          rules: {
-            required,
-            valid: (value, model) => model.password === value,
-          },
+          type: 'password',
+          error: 'invalid-format:repeatPassword',
+          rules: [{
+            nameProp: 'required',
+            validator: required,
+          }, {
+            nameProp: 'valid',
+            validator: (value, model) => model.password === value,
+          }],
         },
       ],
       submitName: 'Зарегестрироваться',

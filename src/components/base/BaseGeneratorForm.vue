@@ -1,10 +1,11 @@
 <template>
-  <form @submit.prevent="$emmit('submit')">
-    <div v-for="(fields, index) in schema" :key="index">
-      <v-text-field v-model="$v[fields[index].name].$model"
-                    :label="fields[index].label" />
-      <span v-if="$v[fields[index].name].$error">
-        {{ fields[index].error | t_errors }}
+  <form @submit.prevent="onSubmit">
+    <div v-for="(field, index) in schema.fields" :key="index">
+      <v-text-field v-model="$v[field.name].$model"
+                    :label="field.label"
+                    :type="field.type"/>
+      <span v-if="$v[field.name].$error">
+        {{ field.error | t_errors }}
       </span>
     </div>
     <v-btn type="submit"
@@ -16,27 +17,33 @@
 </template>
 
 <script>
-import Vue from 'vue';
+import { required, email } from 'vuelidate/lib/validators';
 
 export default {
   name: 'BaseGeneratorForm',
   props: ['schema', 'type', 'validate_model', 'value'],
   data() {
     return {
-      form: {},
+      name: '',
+      email: '',
+      password: '',
+      repeatPassword: '',
     };
   },
-  created() {
-    this.schema.fields.forEach((field) => {
-      Vue.set(this.form, field.name, '');
-      Vue.set(this.$v, this.$v[field.name], field.rules);
-    });
-  },
   validations: {
-    name: {},
-    email: {},
-    password: {},
-    repeatPassword: {},
+    name: {
+      required,
+      valid: value => value.trim().split(' ').length === 3,
+    },
+    email: { required, email },
+    password: { required },
+    repeatPassword: { required, valid: (value, model) => model.password === value },
+  },
+  methods: {
+    onSubmit() {
+      const { name, password } = this;
+      this.$emit('submitForm', { email: this.email, name, password });
+    },
   },
 };
 </script>

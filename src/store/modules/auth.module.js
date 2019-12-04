@@ -31,6 +31,7 @@ export default {
     async onUserSignUp({ commit }, userFormData) {
       const { email, name, password } = userFormData;
       await fbAuth.createUserWithEmailAndPassword(email, password);
+      fbAuth.displayName = name;
       commit('UPDATE_USER', { displayName: name });
     },
     async onUserSignOut({ commit }) {
