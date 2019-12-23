@@ -1,17 +1,22 @@
 <template>
   <div>
-    <v-icon v-if="isAuth"> fas fa-user-circle</v-icon>
-    <v-icon></v-icon>
     <v-menu close-on-click
             close-on-content-click
             offset-y>
       <template v-slot:activator="{ on }">
-        <v-icon v-on="on" size="16">fas fa-caret-down</v-icon>
+        <div class="user-toolbar" v-on="on">
+          <img v-if="user.photoURL && isAuth"
+               class="user-toolbar__avatar-icon"
+               :src="user.photoURL"
+               :alt="user.displayName" />
+          <v-icon v-else> fas fa-user-circle</v-icon>
+          <v-icon class="user-toolbar__caret-down" size="16">fas fa-caret-down</v-icon>
+        </div>
       </template>
       <v-card flat class="px-5">
         <v-list-item-content>
           <v-list-item-title class="title">Меню</v-list-item-title>
-          <v-list-item-subtitle>{{ user.displayName }}</v-list-item-subtitle>
+          <v-list-item-subtitle v-if="isAuth">{{ user.displayName }}</v-list-item-subtitle>
         </v-list-item-content>
         <v-divider></v-divider>
         <v-list>
@@ -24,17 +29,19 @@
             </v-layout>
           </v-item>
           <v-divider></v-divider>
-          <v-item v-for="(item, index) in menuItems" :key="index">
-            <router-link :to="item.path">
-              <v-layout class="flex-row mt-2">
-                <v-icon size="16" color="blue">{{ item.faIcon }}</v-icon>
-                <span class="ml-2 subtitle-1 black--text">
-                  {{ item.name }}
-                </span>
-              </v-layout>
-            </router-link>
-          </v-item>
-          <v-divider class="my-2"></v-divider>
+          <div v-if="isAuth">
+            <v-item v-for="(item, index) in menuItems" :key="index">
+              <router-link :to="{ name: item.routeName, params: { id: user.uid } }">
+                <v-layout class="flex-row mt-2">
+                  <v-icon size="16" color="blue">{{ item.faIcon }}</v-icon>
+                  <span class="ml-2 subtitle-1 black--text">
+                    {{ item.name }}
+                  </span>
+                </v-layout>
+              </router-link>
+            </v-item>
+          </div>
+          <v-divider v-if="isAuth" class="my-2"></v-divider>
           <v-item>
             <v-list-item-group v-if="isAuth">
               <v-icon size="16" color="blue">fas fa-sign-out-alt</v-icon>
@@ -75,7 +82,7 @@ export default {
         {
           name: route.meta.appMenu.name,
           faIcon: route.meta.appMenu.faIcon,
-          path: route.path,
+          routeName: route.name,
         }
       ));
   },
@@ -99,8 +106,22 @@ export default {
 };
 </script>
 
-<style lang="scss">
-  a {
-    text-decoration: none;
-  }
+<style lang="sass">
+  a
+    text-decoration: none
+
+  .user-toolbar
+    display: flex
+    flex-flow: row nowrap
+    cursor: pointer
+
+    &:hover &__caret-down
+      opacity: 0.5
+
+    &__avatar-icon
+      width: 2rem
+      height: 2rem
+      object-fit: contain
+      border-radius: 50%
+
 </style>

@@ -22,9 +22,6 @@ export default {
     ...mapState('channels', ['channels']),
     ...mapState('auth', ['user']),
   },
-  created() {
-    console.log(this.user);
-  },
   components: { AppLayout },
 };
 </script>

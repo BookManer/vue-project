@@ -28,15 +28,27 @@ export default {
 
       return user;
     },
-    async onUserSignUp({ commit }, userFormData) {
-      const { email, name, password } = userFormData;
+    async onUserSignUp({ commit, rootState }, userFormData) {
+      const {
+        email, name, password, fileAvatar,
+      } = userFormData;
+      await rootState.firestore.storage().ref(`/images/${fileAvatar.name}`).put(fileAvatar);
       await fbAuth.createUserWithEmailAndPassword(email, password);
-      fbAuth.displayName = name;
-      commit('UPDATE_USER', { displayName: name });
+      const photoURL = await rootState.firestore.storage().ref(`/images/${fileAvatar.name}`).getDownloadURL();
+      await fbAuth.currentUser.updateProfile({
+        displayName: name,
+        photoURL,
+      });
+
+      commit('UPDATE_USER', fbAuth.currentUser);
     },
     async onUserSignOut({ commit }) {
       await fbAuth.signOut();
       commit('UPDATE_USER', null);
+    },
+    async updateUser({ commit }, payload) {
+      await fbAuth.currentUser.updateProfile(payload);
+      commit('UPDATE_USER', payload);
     },
   },
 };

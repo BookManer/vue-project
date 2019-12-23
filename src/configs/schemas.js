@@ -1,56 +1,65 @@
-import { required, email } from 'vuelidate/lib/validators';
-
 export default {
   forms: {
     formSignUp: {
       fields: [
         {
+          name: 'avatarURL',
+          label: 'Фотография профиля',
+          error: 'invalid-format:limit_size',
+          component: 'v-file-input',
+          additionalProps: {
+            'prepend-icon': 'fa-camera',
+          },
+        }, {
           name: 'email',
           type: 'email',
           label: 'Почта',
           error: 'invalid-format:email',
-          rules: [{
-            nameProp: 'required',
-            validator: required,
-          }, {
-            nameProp: 'email',
-            validator: email,
-          }],
+          component: 'v-text-field',
         }, {
           name: 'name',
           label: 'ФИО',
           type: 'text',
           error: 'invalid-format:fio',
-          rules: [{
-            nameProp: 'required',
-            validator: required,
-          }, {
-            nameProp: 'valid',
-            validator: value => value.trim().split(' ').length === 3,
-          }],
+          component: 'v-text-field',
         }, {
           name: 'password',
           label: 'Пароль',
           type: 'password',
-          rules: [{
-            nameProp: 'required',
-            validator: required,
-          }],
+          component: 'v-text-field',
         }, {
           name: 'repeatPassword',
           label: 'Подтвердить пароль',
           type: 'password',
           error: 'invalid-format:repeatPassword',
-          rules: [{
-            nameProp: 'required',
-            validator: required,
-          }, {
-            nameProp: 'valid',
-            validator: (value, model) => model.password === value,
-          }],
+          component: 'v-text-field',
         },
       ],
       submitName: 'Зарегестрироваться',
+    },
+    formEditProfile: {
+      fields: [
+        {
+          name: 'displayName',
+          label: 'ФИО',
+          type: 'text',
+          error: 'invalid-format:fio',
+          component: 'v-text-field',
+        }, {
+          name: 'email',
+          label: 'Почта',
+          type: 'email',
+          error: 'invalid-format:email',
+          component: 'v-text-field',
+        }, {
+          name: 'aboutMe',
+          label: 'О себе',
+          type: 'textarea',
+          error: 'invalid-format:maxsize',
+          component: 'v-textarea',
+        },
+      ],
+      submitName: 'Применить',
     },
   },
 };

@@ -12,24 +12,23 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
-router.beforeResolve((to, from, next) => {
+router.beforeEach((to, from, next) => {
   try {
-    if (to.meta.requiredAuth) {
-      if (!store.getters['auth/isAuth']) {
-        fbAuth.onAuthStateChanged((currentUser) => {
-          const isAuth = !!currentUser;
-          if (!isAuth) {
-            next({
-              path: '/signIn',
-              query: { redirect: to.fullPath },
-            });
-          }
+    if (to.meta.requiredAuth && to.name !== 'signIn') {
+      fbAuth.onAuthStateChanged((currentUser) => {
+        const isAuth = !!currentUser;
+        if (!isAuth) {
+          next({
+            path: '/signIn',
+            query: { redirect: to.fullPath },
+          });
+        } else {
+          next();
+        }
 
-          store.commit('auth/UPDATE_USER', currentUser);
-          store.commit('auth/UPDATE_IS_AUTHORIZED', !!currentUser);
-        });
-      }
-      next();
+        store.commit('auth/UPDATE_USER', currentUser);
+        store.commit('auth/UPDATE_IS_AUTHORIZED', !!currentUser);
+      });
     }
     next();
   } catch (err) {

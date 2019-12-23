@@ -6,5 +6,6 @@ export default firebase.initializeApp({
   databaseURL: `https://${process.env.VUE_APP_FIRERTDB_PROJECT_ID}.firebaseio.com`,
   projectId: process.env.VUE_APP_FIRERTDB_PROJECT_ID,
   messagingSenderId: '603657977500',
+  storageBucket: 'gs://vue-project-70b06.appspot.com',
   appId: process.env.VUE_APP_FIRERTDB_PROJECT_ID,
 });

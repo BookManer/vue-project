@@ -33,15 +33,18 @@ export default {
   },
   methods: {
     ...mapActions('auth', ['onUserSignUp']),
-    async onSubmit(formData) {
-      const { name, password } = formData;
+    onSubmit(formData) {
+      const { name, password, photoURL } = formData;
       this.loading = true;
-      this.onUserSignUp({ email: formData.email, name, password })
+      this.onUserSignUp({
+        email: formData.email, name, password, fileAvatar: photoURL,
+      })
         .then(() => {
           this.$router.push({ name: 'home' });
           this.loading = false;
         })
         .catch((err) => {
+          console.log(err);
           this.loading = false;
           this.error = err.code;
           setTimeout(() => { this.error = ''; }, 1500);
